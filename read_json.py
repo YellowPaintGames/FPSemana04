@@ -1,19 +1,26 @@
 import json
-import os.path
-path="data.json"
-if os.path.exists(path)==False:
-    print("ERRO: Ficheiro não existe")
-elif ".json" not in path:
-    print("ERRO: Ficheiro não é JSON")
-else:
-    file = open(path, "rt",encoding='utf-8')
-    json_data = file.read()
-    if json_data=='' or json_data=='{}':
-        print("ERRO: O ficheiro está vazio")
+json_file = input("Type in the json file you want to read: ")
+try:
+    file = open(json_file, "rt", encoding="utf-8")
+    conteudo = file.read()
+    
+    dados = json.loads(conteudo)
+
+    assert dados["nome"]
+    assert dados["idade"]
+    assert dados["localização"]
+
+    print(dados)
+
+    file.close()
+except FileNotFoundError:
+    print("ERRO: Ficheiro Não Encontrado!!!!")
+except json.JSONDecodeError:
+    if conteudo.strip() == "":
+        print("Erro: Ficheiro Vazio!")
     else:
-        data = json.loads(json_data)
-        if "idade" not in data or "nome" not in data or "localização" not in data:
-            print("ERRO: Campos obrigatórios em falta")
-        else:
-            print(data)
-            file.close()
+        print("Erro: Ficheiro Não Contém JSON Válido!")
+except KeyError:
+    print("Erro: Campos Obrigatórios Em Falta!")
+finally:
+    print("Processo Concluído!")
